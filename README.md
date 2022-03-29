@@ -7,6 +7,7 @@
 This is the Github page for 5293 Spring 2022 Community Distribution Group 35
 
 ## Group Member
++ CC 35
     + Haozhong Zheng (hz2694@columbia.edu)
     + Weixun Qian (wq2157@columbia.edu)
 
