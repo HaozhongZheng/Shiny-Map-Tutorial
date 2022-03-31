@@ -1,0 +1,13 @@
+name: shiny_map_tutorial
+title: shiny_map_tutorial
+username:
+account: tonyz
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5984149
+bundleId: 5751047
+url: https://tonyz.shinyapps.io/shiny_map_tutorial/
+when: 1648753801.77521
+lastSyncTime: 1648753801.77521
+asMultiple: FALSE
+asStatic: FALSE
