@@ -1,4 +1,4 @@
-# Shiny Map Tutorial
+# Shiny Map Tutorial （[App link](https://tonyz.shinyapps.io/shiny_map_tutorial/))
 5293 Spring 2022 Community Distribution Group 35
 
 ![screenshot](figs/homeless.gif)
