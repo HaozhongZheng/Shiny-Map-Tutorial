@@ -4,10 +4,6 @@ Haozhong Zheng and Weixun Qian
 
 ```{r, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# produce reference
-knitr::write_bib(c(.packages(), "rgdal", "ggplot2", "ggspatial", "viridis",
-                   "magick", "leaflet", "shiny", "shinythemes",
-                   "broom", "DT"), "packages.bib")
 
 library(shiny)
 library(leaflet)
