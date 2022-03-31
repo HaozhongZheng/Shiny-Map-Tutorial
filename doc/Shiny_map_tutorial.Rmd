@@ -1,9 +1,19 @@
-# R Shiny Map Tutorial
+---
+title: "Shiny Map App Tutorial"
+author: "Weixun Qian(wq2157), Haozhong Zheng(hz2694)"
+output: 
+  html_document:
+    toc: true
+runtime: shiny
+bibliography: packages.bib
+---
 
-Haozhong Zheng and Weixun Qian
-
-```{r, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# produce reference
+knitr::write_bib(c(.packages(), "rgdal", "ggplot2", "ggspatial", "viridis",
+                   "magick", "leaflet", "shiny", "shinythemes",
+                   "broom", "DT"), "packages.bib")
 
 library(shiny)
 library(leaflet)
@@ -22,7 +32,7 @@ library(magick)
 ```
 
 
-## To Start with
+# 1 To Start with
 *** 
 
 </br>
@@ -37,10 +47,10 @@ Shiny apps have two basic components:
 
 </br>
 
-### Create an app
+## 2.1 Create an app
 ***
 
-#### Initialize a pair of ui.R and server.R in the same folder.
+### 2.1.1 Initialize a pair of ui.R and server.R in the same folder.
 
 As an example, we plot a histogram with a fitted line, and what's different from ggplot is that the users could tune the parameters of the plot
 ```{r,echo=FALSE}
@@ -83,7 +93,7 @@ fluidPage(
 </br>
 </br>
 
-#### Run App
+### 2.1.2 Run App
   
 __Option 1__
 ```{r,eval=FALSE}
@@ -96,7 +106,7 @@ __Option 2__
 Press the 'run App' button
 
 
-#### Publish
+### 2.1.3 Publish
   
 
 __Option 1__
@@ -121,7 +131,7 @@ Press the 'publish' button and a window would pop up. Follow the instruction and
 </br>
 
 
-### A Simple Example
+## 2.2 A Simple Example
 ***
 
 ```{r,echo=FALSE}
@@ -147,7 +157,7 @@ renderPlot({
 </br>
 </br>
 
-### Detailed Codes
+## 2.3 Detailed Codes
 ***
 
 ```{r,eval=FALSE}
@@ -183,10 +193,10 @@ shinyServer(function(input, output) {
 </br>
 
 
-## Learn from Scratch 
+# 3 Learn from Scratch 
 ***
 
-### Empty App
+## 3.1 Empty App
 __ui.R__
 ```{r,eval=FALSE}
 shinyUI(fluidPage(
@@ -200,7 +210,7 @@ shinyServer(function(input, output) {
 ```  
 First we create an empty shiny app, which consists of an ui.R and an server.R file, they collectively form the whole app. Next, we are going to put into some building blocks of the app to enrich it.
 
-### Layout
+## 3.2 Layout
 Shiny `ui.R` scripts use the function `fluidPage` to create a display that automatically adjusts to the dimensions of your user's browser window. You lay out your app by placing elements in the `fluidPage` function. Basically you partition the whole page into several blocks and place the desired widget into each block.
 
 __ui.R__
@@ -216,7 +226,7 @@ shinyUI(fluidPage(
 ```
 
 
-### Add Control Widgets
+## 3.3 Add Control Widgets
 What's a [widget](http://shiny.rstudio.com/gallery/widget-gallery.html)? A web element that your users can interact with. Widgets provide a way for your users to send messages to the Shiny app. Shiny widgets collect a value from your user. When a user changes the widget, the value will change as well. We could combine the use of controlling widgets and data filters to produce interactive plots that makes updation each time the user changes the parameters of the plot.
 
 
@@ -226,11 +236,11 @@ Each widget function requires several arguments. The first two arguments for eac
 
 -A **label**. This label will appear with the widget in your app. It should be a character string, but it can be an empty string "".
 
-For instance, the name is “action” and the label is “Action”: `actionButton("action", label = "Action")`.
+For instance, the name is "action" and the label is "Action": `actionButton("action", label = "Action")`.
 
 In the next part we introduce some of the most common widgets in shiny, and you could definitely find out more in the official documents that satisfies advanced implementation needs.
 
-#### Action button
+### 3.3.1 Action button
 ***
 The action button updates the value as the user wishes each time you click on the button.
 ```{r,echo=FALSE}
@@ -280,7 +290,7 @@ output$actionO=renderPrint({ input$actionB[1] })
 </br>
 </br>
 
-#### Single checkbox
+### 3.3.2 Single checkbox
 ***
 You could use checkbox to decide if you need a specific feature/filter in your plot.
 ```{r,echo=FALSE}
@@ -333,7 +343,7 @@ output$checkbox <- renderPrint({ input$checkbox })
 
 
 
-#### Select box
+### 3.3.3 Select box
 ***
 You could also select from a bunch of values that are pre-defined, choices may be single or multiple.
 ```{r,echo=FALSE}
@@ -384,7 +394,7 @@ output$select <- renderPrint({ input$select })
 </br>
 </br>
 
-#### Slider
+### 3.3.5 Slider
 ***
 You could also implement a slider to enable a larger range of values for choice.
 ```{r,echo=FALSE}
@@ -430,7 +440,7 @@ output$slider1 <- renderPrint({ input$slider1 })
 </br>
 </br>
 
-### Display reactive output
+## 3.4 Display reactive output
 ***
 
 You can create reactive output with a two step process.
@@ -516,10 +526,10 @@ shinyServer(function(input, output) {
 })
 ```
 
-## Create static map
+# 4 Create static map
 ***
 
-### Import shape files
+## 4.1 Import shape files
 ***
 
 Firstly you can import shape files into R using `readOGR()` from the **rgdal** package. The example here is the shape file of [New York City by community district (Clipped to Shoreline)](https://www1.nyc.gov/site/planning/data-maps/open-data/districts-download-metadata.page).
@@ -530,7 +540,7 @@ nycd <- "../data/nycd/nycd.shp"
 nycd_shp <- readOGR(dsn = nycd, stringsAsFactors = F)
 ```
 
-### Shape files in R
+## 4.2 Shape files in R
 ***
 
 The data frame of the shape files in R divides into 2 parts: the **data** and **polygons**.
@@ -538,7 +548,7 @@ The data frame of the shape files in R divides into 2 parts: the **data** and **
 summary(nycd_shp)
 ```
 
-#### Data part
+### 4.2.1 Data part
 ***
 
 Usually the data part of the shape files contains 3 main geographical information:
@@ -547,7 +557,7 @@ Usually the data part of the shape files contains 3 main geographical informatio
 * Length of the shape
 * Area of the shape
 
-### Theme of the map
+## 4.3 Theme of the map
 ***
 
 Here are list of some common theme setting of the map:
@@ -574,7 +584,7 @@ theme_map <- function(...) {
 }
 ```
 
-### Draw the raw map
+## 4.4 Draw the raw map
 ***
 
 Finally you can draw the map using `geom_polygon()` from the **ggplot** package without filling any data. The **x** variable here is **longitude** and **y** variable is **latitude**, which are contains in the shape file.
@@ -588,7 +598,7 @@ ggplot() +
 As a result, we can only see the raw contour map of New York. Therefore, we need to add some spatial lines to separate each community district. 
 
 
-### Add some spatial lines to the map
+## 4.5 Add some spatial lines to the map
 ***
 
 In this part we add spatial lines to the map using `annotation_spatial()` from the **ggspatial** package:
@@ -600,12 +610,12 @@ ggplot() +
   labs(title = "Map of New York city by community district")
 ```
 
-### Fill the map with data
+## 4.6 Fill the map with data
 ***
 
 The ultimate goal of our project is to visualize data, for example, the population of NYC. Here we use the example of [homelessness of New York during covid-19 pandenmic](https://data.cityofnewyork.us/Social-Services/Associated-Address-by-Borough-and-Community-Distri/ur7y-ziyb).
 
-#### Import data
+### 4.6.1 Import data
 Firstly, you can import our data set. Please note that the data is preprocessed by adding [community district code](https://www1.nyc.gov/assets/planning/download/pdf/data-maps/open-data/selfac_datainfo.pdf) by using the NYC government document. This is because all the cd code in the shape file starts with borough code. The details are listed as follows:
 
 | | | | | | |
@@ -621,7 +631,7 @@ homeless_tidy <- read.csv("../data/homeless_tidy.csv")
 covid_date <- factor(homeless_tidy$date)
 ```
 
-#### Join data set
+### 4.6.2 Join data set
 ***
 
 Secondly, you can join the data set by community district information:
@@ -633,7 +643,7 @@ homeless_tidy %>%
   merge(x = nycd_shp, by.x = "BoroCD", by.y = "BoroCD") -> df  # join data set
 ```
 
-#### Fill data
+### 4.6.3 Fill data
 ***
 
 Finally, you can plot the data with homeless people using `layer_spatial()` from **ggspatial** package:
@@ -649,7 +659,7 @@ ggplot() +
 ```
 
 
-#### Viridis style
+### 4.6.4 Viridis style
 ***
 
 In this part you can add some viridis style to the map to make it more clear. You can use `scale_fill_viridis()` from **viridis** package. 
@@ -673,12 +683,12 @@ ggplot() +
   labs(title = paste0("Homeless people in New York City " , as.character(levels(covid_date)[1])))
 ```
 
-### Produce GIF file
+## 4.7 Produce GIF file
 ***
 
 You can generate a gif file that shows the animation of NYC homelessness in this section.
 
-#### Generate multiple files
+### 4.7.1 Generate multiple files
 ***
 
 You firstly generate multiple files using for loop. Then we save these imgages by using `ggsave()` from the **ggplot** package:
@@ -715,7 +725,7 @@ ggsave(filename = paste0(stringr::str_pad(i, 3, pad = "0"), ".png"), path = "../
 }
 ```
 
-#### Produce gif file
+### 4.7.2 Produce gif file
 ***
 
 Finally you can generate the gif file using `image_animate()` from **magick** package:
@@ -729,10 +739,10 @@ lapply(imgs, image_read) %>%
 
 ![Alt Text](../figs/homeless.gif)
 
-## Create interactive map
+# 5 Create interactive map
 ***
 
-### Overview of the APP
+## 5.1 Overview of the APP
 ***
 
 First, let's take a look at the app and get an overview of each tab, and then we will break it down and introduce how it's coded.
@@ -827,7 +837,7 @@ output$mymap <- renderLeaflet({
 })
 ```
 
-### Code breakdown of the app 
+## 5.2 Code breakdown of the app 
 ***
 
 For the server part, first we have to deal with the data. The `reactive` class encloses a dataset that's subjected to user actions. It reacts to several buttons and sliders of users' need, and will update the filtered dataset once the user performs a new action, we need it so that we could update the graph accordingly. Next, we introduce the `renderplot` function, which is basically just a plot that changes as the `reactive` dataset updates. Finally, the `renderleaflet` plot is a function in the `leaflet` package that enables an interactive plot, and has functions to add labels, markers, etc. 
@@ -918,12 +928,3 @@ output$mymap <- renderLeaflet({
   )
       )
 ```
-
-## References
-
-* [ggspatial](https://cran.r-project.org/web/packages/ggspatial/index.html)
-* [leaflet](https://rstudio.github.io/leaflet/)
-* [magick](https://cran.r-project.org/web/packages/magick/index.html)
-* [R shiny](http://shiny.rstudio.com/)
-* [viridis](https://cran.r-project.org/web/packages/viridis/index.html)
-
